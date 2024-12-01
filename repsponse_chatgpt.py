@@ -34,8 +34,3 @@ class ResponseChatGPT:
             response_data = response.json()
             reply = response_data["choices"][0]["message"]["content"]
             return reply
-        
-if __name__ == "__main__":
-    response = ResponseChatGPT()
-    reply = response.send_message("You are a helpful assistant.", "こんにちは。")
-    print(reply)
