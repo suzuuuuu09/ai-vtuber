@@ -10,23 +10,21 @@ VOICEVOX_API_URL = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/"
 AUDIO_FILE_PATH = "audio/output.wav"
 
 class VoiceVoxPlayer:
-    def __init__(self, text: str, 
-                 api_key: str = VOICEVOX_API_KEY, 
+    def __init__(self, api_key: str = VOICEVOX_API_KEY, 
                  api_url: str = VOICEVOX_API_URL, 
                  audio_file_path: str = AUDIO_FILE_PATH):
-        self.text = text
         self.api_key = api_key
         self.api_url = api_url
         self.audio_file_path = audio_file_path
 
-    def generate_audio(self):
+    def generate_audio(self, text: str):
         params = {
             "key": self.api_key,
             "speaker": 0,
             "pitch": 0,
             "intonationScale": 1,
             "speed": 1,
-            "text": self.text
+            "text": text
         }
 
         response = requests.post(self.api_url, params=params)
