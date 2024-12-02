@@ -33,4 +33,5 @@ class ResponseChatGPT:
         if response.status_code == 200:
             response_data = response.json()
             reply = response_data["choices"][0]["message"]["content"]
+            print(reply)
             return reply
