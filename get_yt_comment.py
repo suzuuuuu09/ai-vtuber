@@ -1,5 +1,6 @@
 import os
 import requests
+import json
 from time import sleep
 from dotenv import load_dotenv
 
@@ -13,9 +14,10 @@ GOOGLE_API_URL = "https://www.googleapis.com/youtube/v3"
 def get_live_chat_id(video_id):
     url = f"{GOOGLE_API_URL}/videos"
     params = {
+        "key": GOOGLE_API_KEY,
         "part": "liveStreamingDetails",
         "id": video_id,
-        "key": GOOGLE_API_KEY
+        "maxResults": 10,
     }
     response = requests.get(url, params=params)
     if response.status_code != 200:
@@ -34,9 +36,10 @@ def get_live_chat_id(video_id):
 def get_live_chat_messages(live_chat_id):
     url = f"{GOOGLE_API_URL}/liveChat/messages"
     params = {
+        "key": GOOGLE_API_KEY,
         "liveChatId": live_chat_id,
         "part": "snippet,authorDetails",
-        "key": GOOGLE_API_KEY
+        "maxResults": 10,
     }
     response = requests.get(url, params=params)
     if response.status_code != 200:
@@ -53,24 +56,29 @@ def main(video_id):
 
     print(f"ライブチャットID: {live_chat_id}")
 
-    diff_message = {}
-    prev_diff_message = {}
+    seen_message_ids = set()
+    
     while True:
         try:
             messages = get_live_chat_messages(live_chat_id)
+            new_messages = []
+            
             for message in messages:
                 message_id = message['id']
-                if message_id not in diff_message:
-                    user_name = message['authorDetails']['displayName']
-                    comment = message['snippet']['displayMessage']
-                    diff_message[message_id] = [user_name, comment]
-                    # print(f"{user_name}: {comment}")
-            if diff_message is not prev_diff_message:
-                prev_diff_message = diff_message.copy()
-                diff_message = {}
+                user_name = message['authorDetails']['displayName']
+                comment = message['snippet']['displayMessage']
+                
+                if message_id not in seen_message_ids:
+                    seen_message_ids.add(message_id)
+                    new_messages.append({
+                        'id': message_id,
+                        'user_name': user_name,
+                        'comment': comment
+                    })
             
-            print(diff_message)
-# TODO: コメントを取得する
+            if new_messages:
+                print(json.dumps(new_messages, indent=2, ensure_ascii=False))
+            
             sleep(5)
         except KeyboardInterrupt:
             print("プログラムが中断されました。")
