@@ -1,5 +1,6 @@
 import os
 import requests
+from googleapiclient.discovery import build
 import json
 from time import sleep
 from dotenv import load_dotenv
@@ -8,7 +9,7 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_API_URL = "https://www.googleapis.com/youtube/v3"
-video_id = "9ToWEHO-dHE"
+video_id = "U5OfiWmrTaM"
 
 def get_live_chat_id(video_id):
     url = f"{GOOGLE_API_URL}/videos"
@@ -46,16 +47,11 @@ def get_live_chat_messages(live_chat_id):
         return []
 
     data = response.json()
-    return data.get('items', [])
+    return data.get('items', []) or []
 
 def get_message(video_id):
     live_chat_id = get_live_chat_id(video_id)
     if not live_chat_id: return []
-
-    # TODO: last_messageがNullの時の処理
-
-    # if not last_messages: return []
-    # print(f"LiveChatID: {live_chat_id}")
     
     try:
         messages = get_live_chat_messages(live_chat_id)
@@ -66,37 +62,34 @@ def get_message(video_id):
             user_name = message['authorDetails']['displayName']
             comment = message['snippet']['displayMessage']
             
-                # seen_message_ids.add(message_id)
             new_messages.append({
                 'id': message_id,
                 'user_name': user_name,
                 'comment': comment
             })
         
-        if new_messages:
-            # print(json.dumps(new_messages, indent=2, ensure_ascii=False))
-            if messages is not None: return new_messages
+        return new_messages if new_messages else []
         
     except Exception as e:
         print(f"エラーが発生しました: {e}")
         return []
 
-def get_new_message(cur_message, prev_message=None):
-    if not prev_message:
-        return cur_message
+def get_new_message(cur_messages, prev_messages=None):
+    if not prev_messages:
+        return cur_messages
     
-    last_id = prev_message[-1]["id"]
-    for i, item in enumerate(cur_message):
+    last_id = prev_messages[-1]["id"]
+    for i, item in enumerate(cur_messages):
         if item["id"] == last_id:
-            return cur_message[i + 1:]
+            return cur_messages[i + 1:]
 
-    return cur_message
+    return cur_messages
 
 if __name__ == '__main__':
     prev_message = None
     while True:
-        cur_message = get_message(video_id=video_id)
-        new_message = get_new_message(cur_message, prev_message)
-        prev_message = cur_message
-        print(json.dumps(new_message, indent=2, ensure_ascii=False))
-        sleep(1)
+        cur_messages = get_message(video_id=video_id)
+        new_messages = get_new_message(cur_messages, prev_message)
+        prev_message = cur_messages
+        print(json.dumps(new_messages, indent=2, ensure_ascii=False))
+        sleep(5)
