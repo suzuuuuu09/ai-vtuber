@@ -6,7 +6,7 @@ import soundfile as sf
 load_dotenv()
 
 VOICEVOX_API_KEY = os.getenv('VOICEVOX_API_KEY')
-VOICEVOX_API_URL = f"https://deprecatedapis.tts.quest/v2/voicevox/audio/"
+VOICEVOX_API_URL = "https://deprecatedapis.tts.quest/v2/voicevox/audio/"
 AUDIO_FILE_PATH = "audio/output.wav"
 speaker_id = 1
 
