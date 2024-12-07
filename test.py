@@ -1,5 +1,6 @@
 from repsponse_chatgpt import ResponseChatGPT
 from voicevox_player import VoiceVoxPlayer
+from yt_chat import YoutubeLiveChat
 
 SYSTEM_PROMPT = """\
 あなたはバーチャルユーチューバーとして配信を行います。返答をする際は以下のことを注意してください:
@@ -23,6 +24,19 @@ You will distribute as a virtual youtuber. When responding, please keep the foll
 - Keep each sentence to 60 words or less in Japanese.
 """
 
+# コメントの取得
+live_url = "https://www.youtube.com/watch?v=Ru2SoKRLbDE"
+chat = YoutubeLiveChat(live_url)
+
+cur_messages = chat.get_message()
+new_messages = chat.get_new_message(cur_messages)
+chat.prev_message = cur_messages
+
+comments = [data["comment"] for message in new_messages for data in message["data"]]
+user_names = [data["user_name"] for message in new_messages for data in message["data"]]
+# TODO: コメントを取得してからGPTにリクエストをおくる
+
+# 応答と合成音声の再生
 response = ResponseChatGPT()
 player = VoiceVoxPlayer()
 

@@ -1,8 +1,7 @@
-import json
-from yt_comment import YoutubeLiveChat
+from yt_chat import YoutubeLiveChat
 
-video_id = "KwCXvg-BdPI"
-yt_chat = YoutubeLiveChat(video_id)
+video_url = "https://youtu.be/gPjDmXCHvkM"
+yt_chat = YoutubeLiveChat(video_url)
 
 cur_messages = yt_chat.get_message()
 new_messages = yt_chat.get_new_message(cur_messages)
