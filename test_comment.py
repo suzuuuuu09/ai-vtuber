@@ -1,5 +1,5 @@
 import json
-from youtube_comment import YoutubeLiveChat
+from yt_comment import YoutubeLiveChat
 
 video_id = "KwCXvg-BdPI"
 yt_chat = YoutubeLiveChat(video_id)
