@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import re
 from time import sleep
 from dotenv import load_dotenv
 
@@ -10,11 +11,18 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_API_URL = "https://www.googleapis.com/youtube/v3"
 
 class YoutubeLiveChat:
-    def __init__(self, video_id, api_key=GOOGLE_API_KEY, api_url=GOOGLE_API_URL):
-        self.video_id = video_id
+    def __init__(self, video_url, api_key=GOOGLE_API_KEY, api_url=GOOGLE_API_URL):
+        self.video_id = self.get_video_id(video_url)
         self.api_key = api_key
         self.api_url = api_url
         self.prev_message = None
+
+    def get_video_id(self, url):
+        pattern = r"(?:v=|\/)([0-9A-Za-z_-]{11})"
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+        return None
 
     def get_live_chat_id(self):
         url = f"{self.api_url}/videos"
@@ -99,8 +107,8 @@ class YoutubeLiveChat:
 
 
 if __name__ == "__main__":
-    video_id = "1TKWzt2B2Vo"
-    yt_chat = YoutubeLiveChat(video_id)
+    video_url = "https://youtu.be/gPjDmXCHvkM"
+    yt_chat = YoutubeLiveChat(video_url)
 
     while True:
         cur_messages = yt_chat.get_message()
