@@ -1,6 +1,6 @@
 from yt_chat import YoutubeLiveChat
 
-video_url = "https://youtu.be/gPjDmXCHvkM"
+video_url = "https://youtu.be/79XaA_4CYj8"
 yt_chat = YoutubeLiveChat(video_url)
 
 cur_messages = yt_chat.get_message()

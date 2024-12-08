@@ -25,7 +25,7 @@ You will distribute as a virtual youtuber. When responding, please keep the foll
 """
 
 # コメントの取得
-live_url = "https://www.youtube.com/watch?v=Ru2SoKRLbDE"
+live_url = "https://youtu.be/79XaA_4CYj8"
 chat = YoutubeLiveChat(live_url)
 
 cur_messages = chat.get_message()
@@ -34,18 +34,19 @@ chat.prev_message = cur_messages
 
 comments = [data["comment"] for message in new_messages for data in message["data"]]
 user_names = [data["user_name"] for message in new_messages for data in message["data"]]
+print("\n".join(comments))
 # TODO: コメントを取得してからGPTにリクエストをおくる
 
 # 応答と合成音声の再生
-response = ResponseChatGPT()
-player = VoiceVoxPlayer()
+# response = ResponseChatGPT()
+# player = VoiceVoxPlayer()
 
-while True:
-    user_prompt = input("userInput: ")
-    reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
+# for comment in comments:
+#     reply = response.send_message(SYSTEM_PROMPT_EN, comment)
+#     print(reply)
 
-    try:
-        audio_file = player.generate_audio(reply)
-        player.play_audio()
-    except Exception as e:
-        print(f"Error: {e}")
+#     try:
+#         audio_file = player.generate_audio(reply)
+#         player.play_audio()
+#     except Exception as e:
+#         print(f"Error: {e}")
