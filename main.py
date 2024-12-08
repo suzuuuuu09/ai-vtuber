@@ -1,3 +1,4 @@
+import os
 from repsponse_chatgpt import ResponseChatGPT
 from voicevox_player import VoiceVoxPlayer
 from yt_chat import YoutubeLiveChat
@@ -49,4 +50,6 @@ for comment in comments:
         player.play_audio()
     except Exception as e:
         print(f"Error: {e}")
-# TODO: データべース作って履歴保存する。
+# TODO: データべース作って会話履歴保存する
+# TODO: 会話履歴をChatGPTに遅れるようにする
+# TODO: プロンプト修正
