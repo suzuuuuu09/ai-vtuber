@@ -35,18 +35,18 @@ chat.prev_message = cur_messages
 comments = [data["comment"] for message in new_messages for data in message["data"]]
 user_names = [data["user_name"] for message in new_messages for data in message["data"]]
 print("\n".join(comments))
-# TODO: コメントを取得してからGPTにリクエストをおくる
+
 
 # 応答と合成音声の再生
-# response = ResponseChatGPT()
-# player = VoiceVoxPlayer()
+response = ResponseChatGPT()
+player = VoiceVoxPlayer()
 
-# for comment in comments:
-#     reply = response.send_message(SYSTEM_PROMPT_EN, comment)
-#     print(reply)
+for comment in comments:
+    reply = response.send_message(SYSTEM_PROMPT_EN, comment)
 
-#     try:
-#         audio_file = player.generate_audio(reply)
-#         player.play_audio()
-#     except Exception as e:
-#         print(f"Error: {e}")
+    try:
+        audio_file = player.generate_audio(reply)
+        player.play_audio()
+    except Exception as e:
+        print(f"Error: {e}")
+# TODO: データべース作って履歴保存する。
