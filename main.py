@@ -2,6 +2,7 @@ import os
 from repsponse_chatgpt import ResponseChatGPT
 from voicevox_player import VoiceVoxPlayer
 from yt_chat import YoutubeLiveChat
+from chat_db import ChatDataBase, ViewerDataBase
 
 SYSTEM_PROMPT = """\
 あなたはバーチャルユーチューバーとして配信を行います。返答をする際は以下のことを注意してください:
@@ -44,6 +45,7 @@ player = VoiceVoxPlayer()
 
 for comment in comments:
     reply = response.send_message(SYSTEM_PROMPT_EN, comment)
+    # conv_table.insert(dict(user=user_names[comments.index(comment)], comment=comment, reply=reply))
 
     try:
         audio_file = player.generate_audio(reply)
