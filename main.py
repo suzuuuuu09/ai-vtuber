@@ -47,7 +47,7 @@ player = VoiceVoxPlayer()
 for index, comment in enumerate(comments):
     try:
         reply = response.send_message(SYSTEM_PROMPT_EN, comment)
-        
+
         chat_db.add_message(
             role="viewer", 
             name=user_names[index], 
@@ -70,3 +70,5 @@ for index, comment in enumerate(comments):
 
 # TODO: 会話履歴をChatGPTに遅れるようにする
 # TODO: プロンプト修正
+# TODO: コメントの読み上げ機能
+# TODO: 視聴者との関係値
