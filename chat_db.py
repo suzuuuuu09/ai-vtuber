@@ -4,11 +4,12 @@ class ChatDataBase():
     def __init__(self, db_url):
         self.db = dataset.connect(db_url)
         self.conv_table = self.db["conversation"]
+        self.conv_table.delete()
 
-    def add_message(self, role, name, message):
+    def add_message(self, role, message, name):
         self.conv_table.insert({
             "role": role,
-            "name": name if role == "host" else None,
+            "name": name,
             "message": message
         })
 
@@ -22,6 +23,7 @@ class ViewerDataBase():
     def __init__(self, db_url):
         self.db = dataset.connect(db_url)
         self.viewer_table = self.db["viewer"]
+        self.viewer_table.delete()
 
 if __name__ == "__main__":
     chat_db = ChatDataBase("sqlite:///db/test.db")

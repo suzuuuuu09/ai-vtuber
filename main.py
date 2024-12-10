@@ -38,20 +38,35 @@ comments = [data["comment"] for message in new_messages for data in message["dat
 user_names = [data["user_name"] for message in new_messages for data in message["data"]]
 print("\n".join(comments))
 
+chat_db = ChatDataBase("sqlite:///db/test.db")
 
 # 応答と合成音声の再生
 response = ResponseChatGPT()
 player = VoiceVoxPlayer()
 
-for comment in comments:
-    reply = response.send_message(SYSTEM_PROMPT_EN, comment)
-    # conv_table.insert(dict(user=user_names[comments.index(comment)], comment=comment, reply=reply))
-
+for index, comment in enumerate(comments):
     try:
-        audio_file = player.generate_audio(reply)
-        player.play_audio()
+        reply = response.send_message(SYSTEM_PROMPT_EN, comment)
+        
+        chat_db.add_message(
+            role="viewer", 
+            name=user_names[index], 
+            message=comment
+        )
+        chat_db.add_message(
+            role="host",
+            name=None,
+            message=reply
+        )
+
+        try:
+            audio_file = player.generate_audio(reply)
+            player.play_audio()
+        except Exception as e:
+            print(f"Audio Error: {e}")
+    
     except Exception as e:
-        print(f"Error: {e}")
-# TODO: データべース作って会話履歴保存する
+        print(f"Response Error: {e}")
+
 # TODO: 会話履歴をChatGPTに遅れるようにする
 # TODO: プロンプト修正
