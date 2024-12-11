@@ -1,4 +1,3 @@
-import os
 from repsponse_chatgpt import ResponseChatGPT
 from voicevox_player import VoiceVoxPlayer
 from yt_chat import YoutubeLiveChat
@@ -70,5 +69,5 @@ for index, comment in enumerate(comments):
 
 # TODO: 会話履歴をChatGPTに遅れるようにする
 # TODO: プロンプト修正
-# TODO: コメントの読み上げ機能
+# TODO: コメントの読み上げ機能(コメントを読み上げながら裏でChatGPTにリクエスト送る)
 # TODO: 視聴者との関係値
