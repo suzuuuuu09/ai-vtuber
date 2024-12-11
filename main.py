@@ -25,6 +25,9 @@ You will distribute as a virtual youtuber. When responding, please keep the foll
 - Keep each sentence to 60 words or less in Japanese.
 """
 
+db_path = "db/test.db"
+db_url = f"sqlite:///{db_path}"
+
 # コメントの取得
 live_url = "https://youtu.be/79XaA_4CYj8"
 chat = YoutubeLiveChat(live_url)
@@ -37,7 +40,7 @@ comments = [data["comment"] for message in new_messages for data in message["dat
 user_names = [data["user_name"] for message in new_messages for data in message["data"]]
 print("\n".join(comments))
 
-chat_db = ChatDataBase("sqlite:///db/test.db")
+chat_db = ChatDataBase(db_path, db_url)
 
 # 応答と合成音声の再生
 response = ResponseChatGPT()

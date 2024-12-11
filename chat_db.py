@@ -1,7 +1,9 @@
 import dataset
+import os
 
 class ChatDataBase():
-    def __init__(self, db_url):
+    def __init__(self, db_path, db_url):
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
         self.db = dataset.connect(db_url)
         self.conv_table = self.db["conversation"]
         self.conv_table.delete()
@@ -20,13 +22,16 @@ class ChatDataBase():
         return list(dict(row) for row in self.conv_table.all())
 
 class ViewerDataBase():
-    def __init__(self, db_url):
+    def __init__(self, db_path, db_url):
+        os.makedirs(os.path.dirname(db_path), exist_ok=True)
         self.db = dataset.connect(db_url)
         self.viewer_table = self.db["viewer"]
         self.viewer_table.delete()
 
 if __name__ == "__main__":
-    chat_db = ChatDataBase("sqlite:///db/test.db")
+    db_path = "db/test.db"
+    db_url = f"sqlite:///{db_path}"
+    chat_db = ChatDataBase(db_path, db_url)
 
     chat_db.clear_all_messages()
     chat_db.add_message("host", "Bot", "Hello, I'm a chatbot!")
