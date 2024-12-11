@@ -28,6 +28,18 @@ class ViewerDataBase():
         self.viewer_table = self.db["viewer"]
         self.viewer_table.delete()
 
+    def add_viewer_info(self, user_id, user_name):
+        self.viewer_table.insert({
+            "user_id": user_id,
+            "user_name": user_name
+        })
+
+    def clear_all_viewer_info(self):
+        self.viewer_table.delete()
+
+    def get_all_viewer_info(self):
+        return list(dict(row) for row in self.viewer_table.all())
+
 if __name__ == "__main__":
     db_path = "db/test.db"
     db_url = f"sqlite:///{db_path}"

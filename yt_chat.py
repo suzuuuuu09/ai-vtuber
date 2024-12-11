@@ -106,7 +106,7 @@ class YoutubeLiveChat:
         return cur_messages
 
 if __name__ == "__main__":
-    video_url = "https://youtu.be/gPjDmXCHvkM"
+    video_url = "https://www.youtube.com/embed/live_stream?channel=UCdAHaWcKdpbT5XkN2Er6BUQ"
     yt_chat = YoutubeLiveChat(video_url)
 
     while True:

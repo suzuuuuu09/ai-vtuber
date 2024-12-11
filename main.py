@@ -12,6 +12,7 @@ SYSTEM_PROMPT = """\
 - 日本語で応答すること
 - ユーザーに興味を示し、個人的な質問を心がけてください。
 - 一文は日本語で60単語以下に収めてください。
+- 履歴が送られるためそれを元に会話を行ってください。
 """
 
 SYSTEM_PROMPT_EN = """\
@@ -23,6 +24,7 @@ You will distribute as a virtual youtuber. When responding, please keep the foll
 - Respond in Japanese.
 - Show interest in the user and ask personal questions.
 - Keep each sentence to 60 words or less in Japanese.
+- A history will be sent to you, so please use it as the basis for your conversation
 """
 
 db_path = "db/test.db"
@@ -48,7 +50,13 @@ player = VoiceVoxPlayer()
 
 for index, comment in enumerate(comments):
     try:
-        reply = response.send_message(SYSTEM_PROMPT_EN, comment)
+        all_message_data = chat_db.get_all_messages()
+        user_prompt = f"""\
+comment:{comment}
+histroy:{all_message_data}
+"""
+        print(user_prompt)
+        reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
 
         chat_db.add_message(
             role="viewer", 
@@ -70,7 +78,7 @@ for index, comment in enumerate(comments):
     except Exception as e:
         print(f"Response Error: {e}")
 
-# TODO: 会話履歴をChatGPTに遅れるようにする
 # TODO: プロンプト修正
 # TODO: コメントの読み上げ機能(コメントを読み上げながら裏でChatGPTにリクエスト送る)
 # TODO: 視聴者との関係値
+# TODO: Channelの最新のライブから取得できるようにする
