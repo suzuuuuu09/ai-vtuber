@@ -2,6 +2,7 @@ import os
 import requests
 import json
 import re
+import sys
 from time import sleep
 from dotenv import load_dotenv
 
@@ -41,6 +42,7 @@ class YoutubeLiveChat:
         items = data.get("items", [])
         if not items:
             print(f"動画ID {self.video_id} のライブチャットが見つかりません。")
+            sys.exit()
             return None
 
         live_details = items[0].get("liveStreamingDetails", {})

@@ -55,7 +55,6 @@ for index, comment in enumerate(comments):
 comment:{comment}
 histroy:{all_message_data}
 """
-        print(user_prompt)
         reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
 
         chat_db.add_message(
