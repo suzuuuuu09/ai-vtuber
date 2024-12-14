@@ -10,6 +10,7 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_API_URL = "https://www.googleapis.com/youtube/v3"
+max_comments_limit = 3
 
 class YoutubeLiveChat:
     def __init__(self, video_url, api_key=GOOGLE_API_KEY, api_url=GOOGLE_API_URL):
@@ -31,7 +32,7 @@ class YoutubeLiveChat:
             "key": self.api_key,
             "part": "liveStreamingDetails",
             "id": self.video_id,
-            "maxResults": 10,
+            "maxResults": max_comments_limit,
         }
         response = requests.get(url, params=params)
         if response.status_code != 200:
@@ -54,7 +55,7 @@ class YoutubeLiveChat:
             "key": self.api_key,
             "liveChatId": live_chat_id,
             "part": "snippet,authorDetails",
-            "maxResults": 10,
+            "maxResults": max_comments_limit,
         }
         response = requests.get(url, params=params)
         if response.status_code != 200:

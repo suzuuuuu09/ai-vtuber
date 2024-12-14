@@ -50,6 +50,7 @@ player = VoiceVoxPlayer()
 
 for index, comment in enumerate(comments):
     try:
+        user_name = user_names[index]
         all_message_data = chat_db.get_all_messages()
         user_prompt = f"""\
 comment:{comment}
@@ -59,7 +60,7 @@ histroy:{all_message_data}
 
         chat_db.add_message(
             role="viewer", 
-            name=user_names[index], 
+            name=user_name, 
             message=comment
         )
         chat_db.add_message(
@@ -69,8 +70,10 @@ histroy:{all_message_data}
         )
 
         try:
-            audio_file = player.generate_audio(reply)
-            player.play_audio()
+            user_text_audio = player.generate_audio(f"{user_name}さん、{comment}。", "audio/comment.wav")
+            player.play_audio(user_text_audio)
+            reply_audio_file = player.generate_audio(reply, "audio/reply.wav")
+            player.play_audio(reply_audio_file)
         except Exception as e:
             print(f"Audio Error: {e}")
     
