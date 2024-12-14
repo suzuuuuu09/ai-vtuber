@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36" version="25.0.3">
   <diagram name="Page-1" id="2YBvvXClWsGukQMizWep">
-    <mxGraphModel dx="1022" dy="1708" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="532" dy="1416" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -131,6 +131,36 @@
         </mxCell>
         <mxCell id="FllBn6mnmVsICHXjcec_-9" value="&lt;b&gt;GPT-4o mini&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;spacing=0;fontFamily=Noto Sans Japanese;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DNoto%2BSans%2BJapanese;" parent="hrcUNAsqBSZc1PEo5AA2-4" vertex="1">
           <mxGeometry y="75" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-6" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.992;exitY=0.056;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.039;entryY=0.162;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="hrcUNAsqBSZc1PEo5AA2-1" target="hrcUNAsqBSZc1PEo5AA2-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="90" y="50" as="sourcePoint" />
+            <mxPoint x="185" y="50" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-7" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="195" y="40" width="10" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-8" value="&lt;font data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+Japanese&quot; face=&quot;Noto Sans Japanese&quot;&gt;&lt;b&gt;コメントを取得&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;spacing=-8;" vertex="1" parent="1">
+          <mxGeometry x="100" y="35" width="70" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="555" y="60" width="10" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-11" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.095;entryY=0.169;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.987;exitY=0.498;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="hrcUNAsqBSZc1PEo5AA2-7">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="204.05" y="69.85" as="sourcePoint" />
+            <mxPoint x="555" y="69.9900000000001" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-13" value="&lt;font data-font-src=&quot;https://fonts.googleapis.com/css?family=Noto+Sans+Japanese&quot; face=&quot;Noto Sans Japanese&quot;&gt;&lt;b&gt;会話履歴を取得&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;spacing=-8;" vertex="1" parent="1">
+          <mxGeometry x="345" y="55" width="70" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="hrcUNAsqBSZc1PEo5AA2-17" value="" style="endArrow=none;html=1;rounded=0;entryX=0.003;entryY=0.334;entryDx=0;entryDy=0;entryPerimeter=0;dashed=1;endFill=0;startArrow=classic;startFill=1;" edge="1" parent="1" target="hrcUNAsqBSZc1PEo5AA2-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="205" y="79.85" as="sourcePoint" />
+            <mxPoint x="555.95" y="79.9900000000001" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
