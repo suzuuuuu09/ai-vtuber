@@ -32,7 +32,7 @@ class YoutubeLiveChat:
             "key": self.api_key,
             "part": "liveStreamingDetails",
             "id": self.video_id,
-            "maxResults": max_comments_limit,
+            "maxResults": 5,
         }
         response = requests.get(url, params=params)
         if response.status_code != 200:
@@ -55,7 +55,7 @@ class YoutubeLiveChat:
             "key": self.api_key,
             "liveChatId": live_chat_id,
             "part": "snippet,authorDetails",
-            "maxResults": max_comments_limit,
+            "maxResults": 10,
         }
         response = requests.get(url, params=params)
         if response.status_code != 200:

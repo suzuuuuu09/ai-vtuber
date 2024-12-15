@@ -44,19 +44,20 @@ def get_live_video_id(api_key, channel_id):
         print("APIエラー:", response.status_code, response.text)
         return None
 
-# 埋め込みリンク
-embed_url = "https://www.youtube.com/embed/live_stream?channel=UCdAHaWcKdpbT5XkN2Er6BUQ"
+if __name__ == "__main__":
+    # 埋め込みリンク
+    embed_url = "https://www.youtube.com/embed/live_stream?channel=UCdAHaWcKdpbT5XkN2Er6BUQ"
 
-# 埋め込みリンクからチャンネルIDを抽出
-channel_id = extract_channel_id(embed_url)
-if channel_id:
-    print("チャンネルID:", channel_id)
-    # チャンネルIDを基にライブ動画IDを取得
-    video_id = get_live_video_id(API_KEY, channel_id)
-    if video_id:
-        print("現在のライブ動画ID:", video_id)
-        print(f"動画リンク: https://www.youtube.com/watch?v={video_id}")
+    # 埋め込みリンクからチャンネルIDを抽出
+    channel_id = extract_channel_id(embed_url)
+    if channel_id:
+        print("チャンネルID:", channel_id)
+        # チャンネルIDを基にライブ動画IDを取得
+        video_id = get_live_video_id(API_KEY, channel_id)
+        if video_id:
+            print("現在のライブ動画ID:", video_id)
+            print(f"動画リンク: https://www.youtube.com/watch?v={video_id}")
+        else:
+            print("現在ライブ配信中の動画は見つかりませんでした。")
     else:
-        print("現在ライブ配信中の動画は見つかりませんでした。")
-else:
-    print("埋め込みリンクからチャンネルIDを取得できませんでした。")
+        print("埋め込みリンクからチャンネルIDを取得できませんでした。")
