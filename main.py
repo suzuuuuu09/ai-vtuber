@@ -2,6 +2,7 @@ from repsponse_chatgpt import ResponseChatGPT
 from voicevox_player import VoiceVoxPlayer
 from yt_chat import YoutubeLiveChat
 from chat_db import ChatDataBase, ViewerDataBase
+# from obs_controller import OBSController
 from time import sleep
 
 SYSTEM_PROMPT = """\
@@ -32,9 +33,16 @@ db_path = "db/test.db"
 db_url = f"sqlite:///{db_path}"
 
 # コメントの取得
-live_url = "https://youtube.com/live/mzO5aE7V_dk"
+live_url = "https://youtu.be/79XaA_4CYj8"
 chat_db = ChatDataBase(db_path, db_url)
 chat = YoutubeLiveChat(live_url)
+
+# 応答と合成音声の設定
+response = ResponseChatGPT()
+player = VoiceVoxPlayer()
+
+# OBS用の設定
+# obs = OBSController()
 
 while True:
     cur_messages = chat.get_message()
@@ -45,18 +53,15 @@ while True:
     user_names = [data["user_name"] for message in new_messages for data in message["data"]]
     print("\n".join(comments))
 
-    # 応答と合成音声の再生
-    response = ResponseChatGPT()
-    player = VoiceVoxPlayer()
 
     for index, comment in enumerate(comments):
         try:
             user_name = user_names[index]
             all_message_data = chat_db.get_all_messages()
             user_prompt = f"""\
-    comment:{comment}
-    histroy:{all_message_data}
-    """
+            comment:{comment}
+            histroy:{all_message_data}
+            """
             reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
 
             chat_db.add_message(
@@ -71,10 +76,18 @@ while True:
             )
 
             try:
+                # obs.connect()
+                
+                source_name = "reply_text"
+
                 user_text_audio = player.generate_audio(f"{user_name}さん、{comment}。", "audio/comment.wav")
+                # obs.set_text(source_name, f"{user_name}さん、{comment}。")
                 player.play_audio(user_text_audio)
-                reply_audio_file = player.generate_audio(reply, "audio/reply.wav")
-                player.play_audio(reply_audio_file)
+
+                reply_audio = player.generate_audio(reply, "audio/reply.wav")
+                # obs.set_text(source_name, reply)
+                player.play_audio(reply_audio)
+                # obs.disconnect()
             except Exception as e:
                 print(f"Audio Error: {e}")
         
