@@ -1,13 +1,14 @@
-import requests, os
-from dotenv import load_dotenv
+import os
+import asyncio
+import aiohttp
 import sounddevice as sd
 import soundfile as sf
+from dotenv import load_dotenv
 
 load_dotenv()
 
 VOICEVOX_API_KEY = os.getenv('VOICEVOX_API_KEY')
 VOICEVOX_API_URL = "https://deprecatedapis.tts.quest/v2/voicevox/audio/"
-# AUDIO_FILE_PATH = "audio/output.wav"
 speaker_id = 10
 
 class VoiceVoxPlayer:
@@ -16,7 +17,7 @@ class VoiceVoxPlayer:
         self.api_key = api_key
         self.api_url = api_url
 
-    def generate_audio(self, text: str, path: str):
+    async def generate_audio(self, text: str, path: str):
         params = {
             "key": self.api_key,
             "speaker": speaker_id,
@@ -26,22 +27,39 @@ class VoiceVoxPlayer:
             "text": text
         }
 
-        response = requests.post(self.api_url, params=params)
+        async with aiohttp.ClientSession() as session:
+            async with session.post(self.api_url, params=params) as response:
+                if response.status == 200:
+                    audio_data = await response.read()
 
-        if response.status_code == 200:
-            audio_data = response.content
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    with open(path, "wb") as f:
+                        f.write(audio_data)
+                    return path
+                else:
+                    print(f"Failed to generate audio. Status code: {response.status}")
+                    return None
 
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            with open(path, "wb") as f:
-                f.write(audio_data)
-            return path
-        
     def play_audio(self, path):
         sound_data, samplerate = sf.read(path)
         sd.play(sound_data, samplerate)
         sd.wait()
 
-if __name__ == "__main__":
+async def main():
     player = VoiceVoxPlayer()
-    audio_file_path = player.generate_audio("こんにちは！", "audio/output.wav")
-    player.play_audio(audio_file_path)
+
+    # 非同期で音声生成
+    tasks = [
+        player.generate_audio("こんにちは！", "audio/output.wav"),
+        player.generate_audio("おはよう！", "audio/test.wav")
+    ]
+
+    audio_paths = await asyncio.gather(*tasks)
+
+    # 生成した音声を順次再生
+    for path in audio_paths:
+        if path:
+            player.play_audio(path)
+
+if __name__ == "__main__":
+    asyncio.run(main())

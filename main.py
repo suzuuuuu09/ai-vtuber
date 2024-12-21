@@ -4,6 +4,7 @@ from yt_chat import YoutubeLiveChat
 from chat_db import ChatDataBase, ViewerDataBase
 # from obs_controller import OBSController
 from time import sleep
+import asyncio
 
 SYSTEM_PROMPT = """\
 1. **基本キャラクター設定**  
@@ -87,69 +88,70 @@ db_path = "db/test.db"
 db_url = f"sqlite:///{db_path}"
 
 # コメントの取得
-live_url = "https://youtube.com/live/xxxxxxxxxxx"
+live_url = "https://www.youtube.com/watch?v=79XaA_4CYj8"
 chat_db = ChatDataBase(db_path, db_url)
 chat = YoutubeLiveChat(live_url)
 
 # 応答と合成音声の設定
 response = ResponseChatGPT()
-player = VoiceVoxPlayer()
 
 # OBS用の設定
 # obs = OBSController()
 
 while True:
-    cur_messages = chat.get_message()
-    new_messages = chat.get_new_message(cur_messages)
-    chat.prev_message = cur_messages
+   cur_messages = chat.get_message()
+   new_messages = chat.get_new_message(cur_messages)
+   chat.prev_message = cur_messages
 
-    comments = [data["comment"] for message in new_messages for data in message["data"]]
-    user_names = [data["user_name"] for message in new_messages for data in message["data"]]
-    print("\n".join(comments))
+   comments = [data["comment"] for message in new_messages for data in message["data"]]
+   user_names = [data["user_name"] for message in new_messages for data in message["data"]]
+   print("\n".join(f"Comment: {comment}" for comment in comments))
 
+   for index, comment in enumerate(comments):
+      try:
+         user_name = user_names[index]
+         all_message_data = chat_db.get_all_messages()
+         user_prompt = f"""\
+         comment:{comment}
+         histroy:{all_message_data}
+         """
+         reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
 
-    for index, comment in enumerate(comments):
-        try:
-            user_name = user_names[index]
-            all_message_data = chat_db.get_all_messages()
-            user_prompt = f"""\
-            comment:{comment}
-            histroy:{all_message_data}
-            """
-            reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
+         chat_db.add_message(
+             role="viewer", 
+             name=user_name, 
+             message=comment
+         )
+         chat_db.add_message(
+             role="host",
+             name=None,
+             message=reply
+         )               
 
-            chat_db.add_message(
-                role="viewer", 
-                name=user_name, 
-                message=comment
-            )
-            chat_db.add_message(
-                role="host",
-                name=None,
-                message=reply
-            )
-
-            try:
-                # obs.connect()
+         try:
+            async def play_aduios():
+               player = VoiceVoxPlayer()
                 
-                source_name = "reply_text"
+               tasks = [
+                  player.generate_audio(f"{user_name}さん、{comment}。", "audio/comment.wav"),
+                  player.generate_audio(reply, "audio/reply.wav")
+               ]
 
-                user_text_audio = player.generate_audio(f"{user_name}さん、{comment}。", "audio/comment.wav")
-                # obs.set_text(source_name, f"{user_name}さん、{comment}。")
-                player.play_audio(user_text_audio)
+               audio_paths = await asyncio.gather(*tasks)
 
-                reply_audio = player.generate_audio(reply, "audio/reply.wav")
-                # obs.set_text(source_name, reply)
-                player.play_audio(reply_audio)
-                # obs.disconnect()
-            except Exception as e:
-                print(f"Audio Error: {e}")
-        
-        except Exception as e:
-            print(f"Response Error: {e}")
-    sleep(5)
+               for path in audio_paths:
+                  if not path: return
+                  player.play_audio(path)
+                  await asyncio.sleep(1)
+            
+            asyncio.run(play_aduios())
+         except Exception as e:
+            print(f"Audio Error: {e}")
+      
+      except Exception as e:
+         print(f"Response Error: {e}")
+   sleep(5)
 
-# TODO: プロンプト修正
 # TODO: コメントの読み上げ機能(コメントを読み上げながら裏でChatGPTにリクエスト送る)
 # TODO: 視聴者との関係値
 # TODO: Channelの最新のライブから取得できるようにする

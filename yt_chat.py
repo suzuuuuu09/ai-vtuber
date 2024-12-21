@@ -10,7 +10,8 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_API_URL = "https://www.googleapis.com/youtube/v3"
-max_comments_limit = 3
+max_comments = 5  # 一回のリクエストで得るデータ個数
+max_total_comments = 100  # 全体を通して得るコメントデータ個数
 
 class YoutubeLiveChat:
     def __init__(self, video_url, api_key=GOOGLE_API_KEY, api_url=GOOGLE_API_URL):
@@ -32,7 +33,7 @@ class YoutubeLiveChat:
             "key": self.api_key,
             "part": "liveStreamingDetails",
             "id": self.video_id,
-            "maxResults": 5,
+            "maxResults": max_total_comments,
         }
         response = requests.get(url, params=params)
         if response.status_code != 200:
@@ -55,7 +56,7 @@ class YoutubeLiveChat:
             "key": self.api_key,
             "liveChatId": live_chat_id,
             "part": "snippet,authorDetails",
-            "maxResults": 10,
+            "maxResults": max_comments,
         }
         response = requests.get(url, params=params)
         if response.status_code != 200:

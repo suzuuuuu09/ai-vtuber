@@ -21,7 +21,7 @@ class ResponseChatGPT:
 
         data = {
             "model": self.model,
-            "max_tokens": 100,
+            "max_tokens": 1024,
             "messages": [
                 {"role": "system", "content": sys_prompt},
                 {"role": "user", "content": user_prompt}
