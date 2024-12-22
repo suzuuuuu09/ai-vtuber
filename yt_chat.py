@@ -10,7 +10,7 @@ load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_API_URL = "https://www.googleapis.com/youtube/v3"
-max_comments = 5  # 一回のリクエストで得るデータ個数
+max_comments = 1  # 一回のリクエストで得るデータ個数
 max_total_comments = 100  # 全体を通して得るコメントデータ個数
 
 class YoutubeLiveChat:

@@ -152,7 +152,7 @@ while True:
          print(f"Response Error: {e}")
    sleep(5)
 
-# TODO: コメントの読み上げ機能(コメントを読み上げながら裏でChatGPTにリクエスト送る)
 # TODO: 視聴者との関係値
 # TODO: Channelの最新のライブから取得できるようにする
 # TODO: テキストをOBSに表示できるようにする
+# TODO: 自動で話題提供
