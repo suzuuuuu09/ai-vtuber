@@ -89,7 +89,7 @@ db_url = f"sqlite:///{db_path}"
 
 # コメントの取得
 live_url = "https://www.youtube.com/watch?v=79XaA_4CYj8"
-chat_db = ChatDataBase(db_path, db_url)
+
 chat = YoutubeLiveChat(live_url)
 
 # 応答と合成音声の設定
@@ -110,7 +110,11 @@ while True:
    for index, comment in enumerate(comments):
       try:
          user_name = user_names[index]
+         
+         chat_db = ChatDataBase(db_path, db_url)
+         chat_db.clear_all_messages()
          all_message_data = chat_db.get_all_messages()
+
          user_prompt = f"""\
          comment:{comment}
          histroy:{all_message_data}
