@@ -40,8 +40,12 @@ class VoiceVoxPlayer:
                     print(f"Failed to generate audio. Status code: {response.status}")
                     return None
 
-    def play_audio(self, path):
+    async def play_audio(self, path):
+        loop = asyncio.get_event_loop()
         sound_data, samplerate = sf.read(path)
+        await loop.run_in_executor(None, lambda: self._sync_play_audio(sound_data, samplerate))
+
+    def _sync_play_audio(self, sound_data, samplerate):
         sd.play(sound_data, samplerate)
         sd.wait()
 

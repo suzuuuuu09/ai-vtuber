@@ -35,7 +35,7 @@ class ResponseChatGPT:
                 if response.status == 200:
                     response_data = await response.json()
                     reply = response_data["choices"][0]["message"]["content"]
-                    print(f"ChatGPT: {reply}")
+                    print(f"Host: {reply}")
                     return reply
                 else:
                     error_message = await response.text()

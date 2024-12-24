@@ -4,6 +4,7 @@ from yt_chat import YoutubeLiveChat
 from chat_db import ChatDataBase, ViewerDataBase
 # from obs_controller import OBSController
 from time import sleep
+from asyncio import get_event_loop, create_task
 import asyncio
 
 SYSTEM_PROMPT = """\
@@ -98,64 +99,64 @@ response = ResponseChatGPT()
 # OBS用の設定
 # obs = OBSController()
 
-while True:
-   cur_messages = chat.get_message()
-   new_messages = chat.get_new_message(cur_messages)
-   chat.prev_message = cur_messages
+loop = get_event_loop()
 
-   comments = [data["comment"] for message in new_messages for data in message["data"]]
-   user_names = [data["user_name"] for message in new_messages for data in message["data"]]
-   print("\n".join(f"Comment: {comment}" for comment in comments))
+async def test1(user_name, comment, user_prompt):
+   player = VoiceVoxPlayer()
+   tasks = [
+      response.send_message(SYSTEM_PROMPT_EN, user_prompt),
+      player.generate_audio(f"{user_name}さん、{comment}。", "audio/comment.wav")
+   ]
+   reply, comment_audio = await asyncio.gather(*tasks)
+   return reply, comment_audio
 
-   for index, comment in enumerate(comments):
-      try:
-         user_name = user_names[index]
-         
-         chat_db = ChatDataBase(db_path, db_url)
-         chat_db.clear_all_messages()
-         all_message_data = chat_db.get_all_messages()
+async def play_audios(reply, comment_audio):
+   player = VoiceVoxPlayer()
+   tasks = [
+      player.play_audio(comment_audio),
+      player.generate_audio(reply, "audio/reply.wav")
+   ]
+   audio_paths = await asyncio.gather(*tasks)
+   
+   reply_audio = audio_paths[1]
+   if reply_audio:
+      await player.play_audio(audio_paths[1])
+   
+async def main():
+   while True:
+      cur_messages = chat.get_message()
+      new_messages = chat.get_new_message(cur_messages)
+      chat.prev_message = cur_messages
 
-         user_prompt = f"""\
-         comment:{comment}
-         histroy:{all_message_data}
-         """
-         reply = response.send_message(SYSTEM_PROMPT_EN, user_prompt)
+      comments = [data["comment"] for message in new_messages for data in message["data"]]
+      user_names = [data["user_name"] for message in new_messages for data in message["data"]]
+      print("\n".join(f"Comment: {comment}" for comment in comments))
 
-         chat_db.add_message(
-             role="viewer", 
-             name=user_name, 
-             message=comment
-         )
-         chat_db.add_message(
-             role="host",
-             name=None,
-             message=reply
-         )               
-
+      for i, comment in enumerate(comments):
          try:
-            async def play_aduios():
-               player = VoiceVoxPlayer()
-                
-               tasks = [
-                  player.generate_audio(f"{user_name}さん、{comment}。", "audio/comment.wav"),
-                  player.generate_audio(reply, "audio/reply.wav")
-               ]
+            user_name = user_names[i]
 
-               audio_paths = await asyncio.gather(*tasks)
+            chat_db = ChatDataBase(db_path, db_url)
+            chat_db.clear_all_messages()
+            all_message_data = chat_db.get_all_messages()
 
-               for path in audio_paths:
-                  if not path: return
-                  player.play_audio(path)
-                  await asyncio.sleep(1)
-            
-            asyncio.run(play_aduios())
+            user_prompt = f"""\
+            comment:{comment}
+            history:{all_message_data}
+            """
+            try:
+               reply, comment_audio = await test1(user_name, comment, user_prompt)
+               await (play_audios(reply, comment_audio))
+
+            except Exception as e:
+               print(f"Audio Error: {e}")
+
          except Exception as e:
-            print(f"Audio Error: {e}")
-      
-      except Exception as e:
-         print(f"Response Error: {e}")
-   sleep(5)
+            print(f"Response Error: {e}")
+      sleep(5)
 
+if __name__ == "__main__":
+   asyncio.run(main())
 # TODO: 視聴者との関係値
 # TODO: Channelの最新のライブから取得できるようにする
 # TODO: テキストをOBSに表示できるようにする
