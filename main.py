@@ -160,3 +160,4 @@ while True:
 # TODO: Channelの最新のライブから取得できるようにする
 # TODO: テキストをOBSに表示できるようにする
 # TODO: 自動で話題提供
+# TODO: Live2Dモデルの感情変化
